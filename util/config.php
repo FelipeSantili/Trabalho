@@ -7,7 +7,7 @@ estajam sendo exibidos no navegador */
 
 
 //Configurar essas variáveis de acordo com o seu ambiente
-define("DB_HOST", "mysql-server");
+define("DB_HOST", "root");
 define("DB_NAME", "crud_dev2");
 define("DB_USER", "root");
 define("DB_PASSWORD", "root");
