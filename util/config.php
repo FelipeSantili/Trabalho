@@ -7,10 +7,10 @@ estajam sendo exibidos no navegador */
 
 
 //Configurar essas variáveis de acordo com o seu ambiente
-define("DB_HOST", "root");
-define("DB_NAME", "crud_dev2");
+define("DB_HOST", "localhost");
+define("DB_NAME", "jogo");
 define("DB_USER", "root");
-define("DB_PASSWORD", "root");
+define("DB_PASSWORD", "");
 
 //Configurar variável do diretório base da aplicação
-define("BASE_URL", "/devWebII/crud_alunos");
+define("BASE_URL", "/web/trabalho");
