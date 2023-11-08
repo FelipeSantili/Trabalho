@@ -1,33 +1,13 @@
-<?php
-
-//require_once(__DIR__ . "/util/Connection.php");
-
-//$conn = Connection::getConnection();
-//print_r($conn);
-
-//echo "<br>";
-//echo __DIR__;
-include_once(__DIR__  . "/view/include/header.php");
-?>
-
-<div class="row mt-3 justify-content-center">
-  <div class="col-3">
-    <div class="card text-center">
-      <img class="card-image-top mx-auto" 
-        src="<?= BASE_URL . "/img/card_alunos.png" ?>" 
-        style="max-width: 200px; height: auto;" />
-      <div class="card-body">
-        <h5 class="card-title">Alunos</h5>
-      </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-          <a href="<?= BASE_URL . "/view/alunos/listar.php" ?>" 
-            class="card-link">
-            Listagem de Alunos</a>
-        </li>
-      </ul>
+<?php include_once(__DIR__ . "/view/include/header.php")?>
+    <h1 class="mt-5">CRUD de Jogos</h1>
+            
+    <div class="alert alert-info mt-4">
+        <p>Sistema de armazenamento de Jogos, podendo ser feito:</p>
+        <ul>
+            <li><strong>Inserir:</strong> Adicionar um novo jogo à lista.</li>
+            <li><strong>Listar:</strong> Visualizar a lista de jogos existentes.</li>
+            <li><strong>Alterar:</strong> Editar informações de um jogo existente.</li>
+            <li><strong>Excluir:</strong> Remover um jogo da lista.</li>
+        </ul>
     </div>
-  </div>
-</div>
-
-<?php include_once(__DIR__  . "/view/include/footer.php") ?>
+<?php include_once(__DIR__ . "/view/include/footer.php")?>
