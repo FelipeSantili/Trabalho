@@ -1,9 +1,9 @@
 <?php
-//Controller para o modelo de Aluno
+// Controller para o modelo de Jogo
 
-include_once(__DIR__ . "/../dao/AlunoDAO.php");
-include_once(__DIR__ . "/../model/Aluno.php");
-include_once(__DIR__ . "/../service/AlunoService.php");
+include_once(__DIR__ . "/../dao/JogoDAO.php");
+include_once(__DIR__ . "/../model/Jogo.php");
+include_once(__DIR__ . "/../service/JogoService.php");
 
 class JogoController {
 
@@ -21,8 +21,9 @@ class JogoController {
 
     public function inserir(Jogo $jogo) {
         $erros = $this->jogoService->validarDados($jogo);
-        if($erros)
+        if ($erros) {
             return $erros;
+        }
 
         $this->jogoDAO->insert($jogo);
         return array();
@@ -30,8 +31,9 @@ class JogoController {
 
     public function alterar(Jogo $jogo) {
         $erros = $this->jogoService->validarDados($jogo);
-        if($erros)
+        if ($erros) {
             return $erros;
+        }
 
         $this->jogoDAO->update($jogo);
         return array();
@@ -45,4 +47,12 @@ class JogoController {
         $this->jogoDAO->deleteById($idJogo);
     }
 
+    public function listarGeneros() {
+        return $this->jogoDAO->listGeneros();
+    }
+
+    public function listarPlataformas() {
+        return $this->jogoDAO->listPlataformas();
+    }
 }
+?>
