@@ -1,7 +1,8 @@
 <?php
-// Controller para o modelo de Jogo
 
 include_once(__DIR__ . "/../dao/JogoDAO.php");
+include_once(__DIR__ . "/../dao/CategoriaDAO.php");
+include_once(__DIR__ . "/../dao/PlataformaDAO.php");
 include_once(__DIR__ . "/../model/Jogo.php");
 include_once(__DIR__ . "/../service/JogoService.php");
 
@@ -47,12 +48,5 @@ class JogoController {
         $this->jogoDAO->deleteById($idJogo);
     }
 
-    public function listarGeneros() {
-        return $this->jogoDAO->listGeneros();
-    }
-
-    public function listarPlataformas() {
-        return $this->jogoDAO->listPlataformas();
-    }
 }
 ?>
