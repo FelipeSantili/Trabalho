@@ -1,61 +1,71 @@
-<?php 
+<?php
+
 include_once(__DIR__ . "/../../controller/JogoController.php");
 
-// Carrega a lista de jogos
 $jogoCont = new JogoController();
 $jogos = $jogoCont->listar();
+
 ?>
 
-<?php 
+<?php
     include_once(__DIR__ . "/../include/header.php");
-?>    
+?>
 
-<h3>Listagem dos Jogos</h3>
+<h2 class="text-dark mt-5">Lista de Jogos</h2>
 
-<div>
-    <a class="btn btn-success" href="inserir.php">Inserir</a>
-</div>
-
-<table class="table table-striped table-hover mt-3">
-    <thead>
+<table class="table table-striped mt-4">
+    <thead class="thead-dark">
         <tr>
             <th>ID</th>
             <th>Nome</th>
-            <th>Empresa</th>
-            <th>Categoria</th>
             <th>Ano de Lançamento</th>
-            <th>Descrição</th>
+            <th>Empresa</th>
             <th>Preço</th>
+            <th>Categoria</th>
+            <th>Plataforma</th>
             <th></th>
             <th></th>
         </tr>
     </thead>
-
     <tbody>
         <?php foreach($jogos as $j): ?>
             <tr>
                 <td><?= $j->getId() ?></td>
                 <td><?= $j->getNome() ?></td>
-                <td><?= $j->getEmpresa() ?></td>
-                <td><?= $j->getCategoria() ?></td>
                 <td><?= $j->getAnoLancamento() ?></td>
-                <td><?= $j->getDescricao() ?></td>
-                <td><?= $j->getPreco() ?></td>
+                <td><?= $j->getEmpresa() ?></td>
                 <td>
-                    <a class="btn btn-primary" href="alterar.php?id=<?= $j->getId() ?>">
-                        Editar
+                    <?php
+                    if ($j->getPreco() == 0) {
+                        echo 'Grátis';
+                    } else {
+                        echo 'R$ ' . number_format($j->getPreco(), 2, ',', '.');
+                    }
+                    ?>
+                </td>
+
+                <td><?= $j->getCategoria() ?></td>
+                <td><?= $j->getPlataforma() ?></td>
+                <td>
+                    <a href="alterar.php?id=<?= $j->getId() ?>">
+                        <img src="../../img/btn_editar.png" >
                     </a>
                 </td>
                 <td>
-                    <a class "btn btn-danger" href="excluir.php?id=<?= $j->getId() ?>"
+                    <a href="excluir.php?id=<?= $j->getId() ?>"
                         onclick="return confirm('Confirma a exclusão?');" >
-                        Excluir
+                        <img src="../../img/btn_excluir.png" >
                     </a>
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
+
 </table>
+
+<div>
+    <a href="inserir.php" class="btn btn-primary">Inserir</a>
+</div>
 
 <?php 
     include_once(__DIR__ . "/../include/footer.php");
