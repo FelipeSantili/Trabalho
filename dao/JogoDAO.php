@@ -7,61 +7,55 @@ class JogoDAO {
 
     public function list() {
         $conn = Connection::getConnection();
-    
-        $sql = "SELECT j.*, c.nome AS nome_categorias, p.nome AS nome_plataformas" .
-               " FROM jogos j" .
-               " JOIN categorias c ON (c.id = j.id_categoria)" .
+
+        $sql = "SELECT j.*, p.nome AS nome_plataforma, c.nome AS nome_categoria" .
+               " FROM Jogos j" .
                " JOIN plataformas p ON (p.id = j.id_plataforma)" .
+               " JOIN categorias c ON (c.id = j.id_categoria)" .
                " ORDER BY j.id";
-    
+
         $stm = $conn->prepare($sql);
         $stm->execute();
         $result = $stm->fetchAll();
         return $this->mapDBToObject($result);
     }
-    
 
     public function insert(Jogo $jogo){
         $conn = Connection::getConnection();
 
-        $sql = "INSERT INTO jogos (nome, empresa," . " id_categoria, " . " anoLancamento," . " id_plataforma," . " descricao, preco)" .
-            " VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO jogos (nome, anoLancamento, empresa, preco," .
+            " id_plataforma, id_categoria)" .
+            " VALUES (?, ?, ?, ?, ?, ?)";
         $stm = $conn->prepare($sql);
         $stm->execute(array(
             $jogo->getNome(),
-            $jogo->getEmpresa(),
-            $jogo->getCategoria()->getId(),
             $jogo->getAnoLancamento(),
-            $jogo->getPlataforma()->getId(),
-            $jogo->getDescricao(),
+            $jogo->getEmpresa(),
             $jogo->getPreco(),
+            $jogo->getPlataforma()->getId(),
+            $jogo->getCategoria()->getId()
         ));
     }
 
     private function mapDBToObject(array $result) {
         $jogos = array();
         foreach($result as $reg) {
-            $jogo = new jogo();
+            $jogo = new Jogo();
             $jogo->setId($reg['id']);
             $jogo->setNome($reg['nome']);
-            $jogo->setEmpresa($reg['empresa']);
-
-            $categoria = new Categoria();
-            $categoria->setId($reg['id_categoria']);
-            $categoria->setNome($reg['nome_categorias']);
-            $jogo->setCategoria($categoria);
-
             $jogo->setAnoLancamento($reg['anoLancamento']);
+            $jogo->setEmpresa($reg['empresa']);
+            $jogo->setPreco($reg['preco']);
 
             $plataforma = new Plataforma();
             $plataforma->setId($reg['id_plataforma']);
-            $plataforma->setNome($reg['nome_plataformas']);
-            $jogo->setPlataforma($plataforma);
+            $plataforma->setNome($reg['nome_plataforma']);
+            $jogo->setplataforma($plataforma);
 
-            $jogo->setDescricao($reg['descricao']);
-            $jogo->setPreco($reg['preco']);
-
-
+            $categoria = new Categoria();
+            $categoria->setId($reg['id_categoria']);
+            $categoria->setNome($reg['nome_categoria']);
+            $jogo->setcategoria($categoria);
             array_push($jogos, $jogo);
         }
         return $jogos;
@@ -70,13 +64,12 @@ class JogoDAO {
     public function findById(int $idJogo) {
         $conn = Connection::getConnection();
 
-        $sql = "SELECT j.*, c.nome AS nome_categorias, p.nome AS nome_plataformas" .
-            " FROM jogos j" .
-            " JOIN categorias c ON (c.id = j.id_categoria)" .
+        $sql = "SELECT j.*, p.nome AS nome_plataforma, c.nome AS nome_categoria" .
+            " FROM Jogos j" .
             " JOIN plataformas p ON (p.id = j.id_plataforma)" .
+            " JOIN categorias c ON (c.id = j.id_categoria)" .
             " WHERE j.id = ?" .
-            " ORDER BY p.nome";
-
+            " ORDER BY c.nome";
 
         $stm = $conn->prepare($sql);
         $stm->execute(array($idJogo));
@@ -91,17 +84,17 @@ class JogoDAO {
         }
     }
 
-    public function findByNome(string $nomeJogo) {
+    public function findByNome(string $NomeJogo) {
         $conn = Connection::getConnection();
 
-        $sql = "SELECT j.*, c.nome AS nome_categorias, p.nome AS nome_plataformas" .
-        " FROM jogos j" .
-        " JOIN categorias c ON (c.id = j.id_categoria)" .
+        $sql = "SELECT j.*, p.nome AS nome_plataforma, c.nome AS nome_categoria" .
+        " FROM Jogos j" .
         " JOIN plataformas p ON (p.id = j.id_plataforma)" .
-        " WHERE j.nome = ?" .
-        " ORDER BY p.nome";
+        " JOIN categoriaes c ON (c.id = j.id_categoria)" .
+        " WHERE j.Nome = ?" .
+        " ORDER BY c.nome";
         $stm = $conn->prepare($sql);
-        $stm->execute(array($nomeJogo));
+        $stm->execute(array($NomeJogo));
         $result = $stm->fetchAll();
         
         $jogos = $this->mapDBToObject($result);
@@ -111,25 +104,35 @@ class JogoDAO {
             return null;
     }
 
-    public function update(Jogo $jogo){
-        $conn = Connection::getConnection();
+    public function update(Jogo $Jogo){
+        try {
+            $conn = Connection::getConnection();
+    
+            $sql = "UPDATE Jogos SET Nome = ?," . 
+                " anoLancamento = ?, empresa = ?," .
+                " preco= ?, id_plataforma = ?, id_categoria = ?" .
+                " WHERE id = ?";
+            $stm = $conn->prepare($sql);
+            $stm->execute(array(
+                $Jogo->getNome(),
+                $Jogo->getAnoLancamento(),
+                $Jogo->getEmpresa(),
+                $Jogo->getPreco(),
+                $Jogo->getPlataforma()->getId(),
+                $Jogo->getCategoria()->getId(),
+                $Jogo->getId()
+            ));
 
-        $sql = "UPDATE jogos SET nome = ?," . 
-            " Empresa = ?, id_categoria = ?, anoLancamento = ?," .
-            "  id_plataforma = ?, descricao = ?, preco = ?" .
-            " WHERE id = ?";
-        $stm = $conn->prepare($sql);
-        $stm->execute(array(
-            $jogo->getNome(),
-            $jogo->getEmpresa(),
-            $jogo->getCategoria()->getId(),
-            $jogo->getAnoLancamento(),
-            $jogo->getPlataforma()->getId(),
-            $jogo->getDescricao(),
-            $jogo->getPreco(),
-            $jogo->getId()
-        ));
+            if ($stm->rowCount() > 0) {
+                return array();
+            } else {
+                return array("Erro ao atualizar o jogo.");
+            }
+        } catch (PDOException $e) {
+            return array("Erro durante a atualização: " . $e->getMessage());
+        }
     }
+    
 
     public function deleteById(int $idJogo){
         $conn = Connection::getConnection();
