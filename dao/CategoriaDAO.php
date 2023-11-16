@@ -19,9 +19,9 @@ class CategoriaDAO {
     private function mapDBToObject(array $result) {
         $categorias = array();
         foreach ($result as $reg) {
-            $categoria = new categoria();
+            $categoria = new Categoria();
             $categoria->setId($reg['id'])
-                    ->setNome($reg['nome']);
+                  ->setNome($reg['nome']);
             array_push($categorias, $categoria);
         }
         return $categorias;
