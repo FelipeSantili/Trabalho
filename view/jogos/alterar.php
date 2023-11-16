@@ -1,62 +1,64 @@
 <?php
-// View para alterar um jogo
 
-include_once(__DIR__ . "/../../controller/JogoController.php");
 include_once(__DIR__ . "/../../model/Jogo.php");
+include_once(__DIR__ . "/../../model/Categoria.php");
+include_once(__DIR__ . "/../../model/Plataforma.php");
+include_once(__DIR__ . "/../../controller/JogoController.php");
 
 $msgErros = "";
 $jogo = null;
 
-if (isset($_POST['submetido'])) {
-
+if(isset($_POST['submetido'])){
 
     $idJogo = $_POST['id_jogo'];
     $nome = trim($_POST['nome']);
-    $categoria = $_POST['categoria']; 
-    $preco = is_numeric($_POST['preco']) ? $_POST['preco']: null;
-    $anoLancamento = is_numeric($_POST['anoLancamento']) ? $_POST['anoLancamento'] : null;
-    $descricao = trim($_POST['descricao']);
+    $anoLancamento = is_numeric($_POST['anoLancamento']) ? $_POST['anoLancamento'] : NULL;
     $empresa = trim($_POST['empresa']);
+    $preco = is_numeric($_POST['preco']) ? $_POST['preco'] : NULL;
+    $idCategoria = is_numeric($_POST['categoria']) ? $_POST['categoria'] : NULL;
+    $idPlataforma = is_numeric($_POST['plataforma']) ? $_POST['plataforma'] : NULL;
 
-    // Criar um objeto jogo
-    $jogo = new Jogo();
-    $jogo->setId($idJogo);
-    $jogo->setNome($nome);
-    $jogo->setCategoria($categoria);
-    $jogo->setPreco($preco);
-    $jogo->setAnoLancamento($anoLancamento);
-    $jogo->setDescricao($descricao);
-    $jogo->setEmpresa($empresa);
+    $jogo = new jogo();
+    $jogo->setId($idJogo)
+        ->setnome($nome)
+        ->setAnoLancamento($anoLancamento)
+        ->setEmpresa($empresa)
+        ->setPreco($preco);
 
-   
+    if ($idCategoria) {
+        $categoria = new Categoria();
+        $categoria->setId($idCategoria);
+        $jogo->setcategoria($categoria);
+    }
+
+    if ($idPlataforma) {
+        $plataforma = new Plataforma();
+        $plataforma->setId($idPlataforma);
+        $jogo->setplataforma($plataforma);
+    }
+
     $jogoCont = new JogoController();
     $erros = $jogoCont->alterar($jogo);
 
-    
-    if (empty($erros)) {
+    if (!$erros) {
         header("location: listar.php");
         exit;
     }
 
-    
     $msgErros = implode("<br>", $erros);
-} else {
     
+} else {
+
     $idJogo = 0;
-    if (isset($_GET['id'])) {
-        $idJogo = $_GET['id'];
+    if(isset($_GET['id']))
+        $idjogo = $_GET['id'];
 
-        $jogoCont = new JogoController();
-        $jogo = $jogoCont->buscarPorId($idJogo);
+    $jogoCont = new JogoController();
+    $jogo = $jogoCont->buscarPorId($idjogo);
 
-        if (!$jogo) {
-            echo "Jogo não encontrado!<br>";
-            echo "<a href='listar.php'>Voltar</a>";
-            exit;
-        }
-    } else {
-        
-        header("location: listar.php");
+    if(!$jogo) {
+        echo "jogo não encontrado!<br>";
+        echo "<a href='listar.php'>Voltar</a>";
         exit;
     }
 }
