@@ -1,52 +1,47 @@
 <?php
 
 include_once(__DIR__ . "/../dao/JogoDAO.php");
-include_once(__DIR__ . "/../dao/CategoriaDAO.php");
-include_once(__DIR__ . "/../dao/PlataformaDAO.php");
 include_once(__DIR__ . "/../model/Jogo.php");
 include_once(__DIR__ . "/../service/JogoService.php");
 
 class JogoController {
 
-    private JogoDAO $jogoDAO;
-    private JogoService $jogoService;
+    private JogoDAO $JogoDAO;
+    private JogoService $JogoService;
 
     public function __construct() {
-        $this->jogoDAO = new JogoDAO();
-        $this->jogoService = new JogoService();
+        $this->JogoDAO = new JogoDAO();
+        $this->JogoService = new JogoService();
     }
 
     public function listar() {
-        return $this->jogoDAO->list();
+        return $this->JogoDAO->list();
     }
 
-    public function inserir(Jogo $jogo) {
-        $erros = $this->jogoService->validarDados($jogo);
-        if ($erros) {
+    public function inserir(Jogo $Jogo) {
+        $erros = $this->JogoService->validarDados($Jogo);
+        if($erros)
             return $erros;
-        }
 
-        $this->jogoDAO->insert($jogo);
+        $this->JogoDAO->insert($Jogo);
         return array();
     }
 
     public function alterar(Jogo $jogo) {
-        $erros = $this->jogoService->validarDados($jogo);
-        if ($erros) {
+        $erros = $this->JogoService->validarDados($jogo);
+        if($erros)
             return $erros;
-        }
 
-        $this->jogoDAO->update($jogo);
-        return array();
+        $erros = $this->JogoDAO->update($jogo);
+        return $erros;
     }
 
     public function buscarPorId(int $idJogo) {
-        return $this->jogoDAO->findById($idJogo);
+        return $this->JogoDAO->findById($idJogo);
     }
 
     public function excluirPorId(int $idJogo) {
-        $this->jogoDAO->deleteById($idJogo);
+        $this->JogoDAO->deleteById($idJogo);
     }
 
 }
-?>
