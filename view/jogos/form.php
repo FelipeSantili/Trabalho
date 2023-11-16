@@ -1,40 +1,29 @@
 <?php
+
+include_once(__DIR__ . "/../../controller/CategoriaController.php");
+include_once(__DIR__ . "/../../controller/PlataformaController.php");
+
+$categoriaCont = new CategoriaController();
+$categorias = $categoriaCont->listar();
+
+$plataformaCont = new PlataformaController();
+$plataformas = $plataformaCont->listar();
+?>
+
+<?php
 include_once(__DIR__ . "/../include/header.php");
 ?>
 
-<h3><?php echo ($jogo && $jogo->getId() > 0 ? 'Alterar' : 'Inserir') ?> Jogo</h3>
+<h3 class="text-dark mt-5"><?= ($jogo && $jogo->getId() > 0 ? 'Alterar' : 'Inserir') ?> jogo</h3>
 
 <div class="row">
-    <div class="col-6">
+    <div class="col-8 mt-2">
         <form method="POST" action="">
+
             <div class="form-group">
                 <label for="inpNome">Nome:</label>
-                <input class="form-control" type="text" name="nome" id="inpNome" value="<?php echo ($jogo ? $jogo->getNome() : '') ?>">
-            </div>
-
-            <div class="form-group">
-                <label for="inpEmpresa">Empresa:</label>
-                <input class="form-control" type="text" name="empresa" id="inpEmpresa" value="<?php echo ($jogo ? $jogo->getEmpresa() : '') ?>">
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="inpCategoria">Categoria:</label>
-                <select class="form-control" name="categoria" id="inpCategoria">
-                    <option value="">-Selecione-</option>
-                    <option value="Acao">Ação</option>
-                    <option value="RPG">RPG</option>
-                    <option value="Esporte">Esporte</option>
-                    <option value="Simulacao">Simulação</option>
-                    <option value="Aventura">Aventura</option>
-                    <option value="Puzzle">Puzzle</option>
-                    <?php
-                    foreach ($categorias as $categoria) {
-                        $selected = ($jogo && $jogo->getCategoria() && $jogo->getCategoria()->getNome() == $categoria) ? 'selected' : '';
-                        echo "<option value='{$categoria}' {$selected}>{$categoria}</option>";
-                    }
-                    ?>
-                </select>
+                <input class="form-control" type="text" name="nome" id="inpNome"
+                    value="<?= ( $jogo ? $jogo->getNome() : '' ) ?>">
             </div>
 
             <div class="form-group">
@@ -54,34 +43,71 @@ include_once(__DIR__ . "/../include/header.php");
                 </select>
             </div>
 
-
             <div class="form-group">
-                <label for="inpDescricao">Descrição:</label>
-                <input class="form-control" type="text" name="descricao" id="inpDescricao"
-                    value="<?php echo ($jogo ? $jogo->getDescricao() : '') ?>">
+                <label for="inpEmpresa">Empresa:</label>
+                <input class="form-control" type="text" name="empresa" id="inpEmpresa"
+                    value="<?= ( $jogo ? $jogo->getEmpresa() : '' )?>">
             </div>
 
             <div class="form-group">
-                <label for="inpNota">Preço:</label>
-                <input class="form-control" type="number" name="preco" id="inpPreco" step="0.01" 
-                    value="<?php echo ($jogo ? $jogo->getPreco() : '') ?>">
+                <label for="inpPreco">Preço:</label>
+                <input class="form-control" type="text" name="preco" id="inpPreco"
+                    value="<?= ($jogo ? number_format($jogo->getPreco(), 2, ',', '') : '') ?>"
+                    pattern="[0-9]+([\.,][0-9]+)?"
+                    title="Informe um valor válido">
+            </div>
+
+        
+
+            <div class="form-group">
+                <label for="inpCategoria">Categoria:</label>
+                <select class="form-control" name="categoria" id="inpCategoria">
+                    <option value="">---Selecione---</option>
+                    <?php foreach($categorias as $c): ?>
+                        <option value="<?= $c->getId() ?>"
+                            <?php if($jogo && $jogo->getCategoria() &&
+                                $jogo->getCategoria()->getId() == $c->getId())
+                                echo 'selected';
+                            ?>
+                        >
+                            <?= $c->getNome() ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="inpPlataforma">Plataforma:</label>
+                <select class="form-control" name="plataforma" id="inpPlataforma">
+                    <option value="">---Selecione---</option>
+                    <?php foreach($plataformas as $p): ?>
+                        <option value="<?= $p->getId() ?>"
+                            <?php if($jogo && $jogo->getPlataforma() &&
+                                $jogo->getPlataforma()->getId() == $p->getId())
+                                echo 'selected';
+                            ?>
+                        >
+                            <?= $p->getNome() ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
 
             <button class="btn btn-success" type="submit">Gravar</button>
-            <button class="btn btn-secondary" type="reset">Limpar</button>
+            <button class="btn btn-danger" type="reset">Limpar</button>
 
-            <input type="hidden" name="id_jogo" value="<?php echo ($jogo ? $jogo->getId() : '') ?>">
+            <input type="hidden" name="id_jogo"
+                value="<?= $jogo ? $jogo->getId() : '' ?>">
             <input type="hidden" name="submetido" value="1">
         </form>
-    </div>
-    <?php if($msgErros): ?>
-        <div class="alert alert-danger">
-            <?= $msgErros ?>
-        </div>
-    <?php endif; ?>
-</div>
-<a class="btn btn-outline-primary mt-5" href="listar.php">Voltar</a>
 
+        <?php if($msgErros): ?>
+            <div style="color: red;">
+                <?= $msgErros ?>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<a href="listar.php" class="btn btn-secondary mt-2 mb-5">Voltar</a>
 <?php
 include_once(__DIR__ . "/../include/footer.php");
 ?>
