@@ -1,78 +1,90 @@
 <?php
-// Modelo para Jogo
+
+include_once(__DIR__ . "/../model/Categoria.php");
+include_once(__DIR__ . "/../model/Plataforma.php");
+
 class Jogo {
-
-    private $id;
-    private $nome;
-    private $empresa;
-    private $categoria;
-    private $anoLancamento;
-    private $descricao;
-    private $preco;
-
+    private ?int $id;
+    private ?string $nome;
+    private ?int $anoLancamento;
+    private ?string $empresa;
+    private ?int $preco;
+    private ?Categoria $categoria;
+    private ?Plataforma $plataforma;
 
     public function __construct() {
         $this->id = 0;
         $this->categoria = null;
-        $this->preco = 0.0;
-
+        $this->plataforma = null;
     }
 
-    public function getId() {
+    public function getId(): ?int {
         return $this->id;
     }
 
-    public function setId($id) {
+    public function setId(?int $id) {
         $this->id = $id;
+
+        return $this;
     }
 
-    public function getNome() {
+    public function getNome(): ?string {
         return $this->nome;
     }
 
-    public function setNome($nome) {
+    public function setNome(?string $nome) {
         $this->nome = $nome;
+
+        return $this;
     }
 
-    public function getEmpresa() {
+    public function getAnoLancamento(): ?int {
+        return $this->anoLancamento;
+    }
+
+    public function setanoLancamento(?int $anoLancamento) {
+        $this->anoLancamento = $anoLancamento;
+
+        return $this;
+    }
+
+    public function getEmpresa(): ?string {
         return $this->empresa;
     }
 
-    public function setEmpresa($empresa) {
+    public function setEmpresa(?string $empresa) {
         $this->empresa = $empresa;
+
+        return $this;
     }
 
+    public function getPreco(): ?int {
+        return $this->preco;
+    }
 
-    public function setCategoria($categoria) {
-        $this->categoria = $categoria;
+    public function setPreco(?int $preco) {
+        $this->preco = $preco;
+
+        return $this;
     }
 
     public function getCategoria() {
         return $this->categoria;
     }
 
-    public function getAnoLancamento() {
-        return $this->anoLancamento;
+    public function setCategoria(?Categoria $categoria) {
+        $this->categoria = $categoria;
+
+        return $this;
     }
 
-    public function setAnoLancamento($anoLancamento) {
-        $this->anoLancamento = $anoLancamento;
+    public function getPlataforma() {
+        return $this->plataforma;
     }
 
-    public function getDescricao() {
-        return $this->descricao;
-    }
+    public function setPlataforma(?Plataforma $plataforma){
+        $this->plataforma = $plataforma;
 
-    public function setDescricao($descricao) {
-        $this->descricao = $descricao;
-    }
-
-    public function getPreco() {
-        return $this->preco;
-    }
-
-    public function setPreco($preco) {
-        $this->preco = $preco;
+        return $this;
     }
 }
-?>
